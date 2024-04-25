@@ -1,5 +1,14 @@
 #include "graph.h"
-void graph::buildGraphFromFile(string filepath)
+int randomZeroOrOne() {
+    // Inicializa la semilla del generador de números aleatorios
+    srand(time(0));
+    
+    // Genera un número aleatorio entre 0 y 1
+    int randomNumber = rand() % 2;
+    
+    return randomNumber;
+}
+void graph::buildGraphFromFile(string filepath, bool isRandomized)
 {
     /*Read strings*/
     vector<string> strings;
@@ -9,8 +18,12 @@ void graph::buildGraphFromFile(string filepath)
     }else{
         while (!input.eof())
         {
+            bool random = randomZeroOrOne();
             string temp;
             getline(input,temp);
+            if(isRandomized)
+                if(random == 0) 
+                    temp = string(temp.rbegin(), temp.rend()); //random reverse
             strings.emplace_back(temp);
         }
     }
@@ -120,6 +133,25 @@ void graph::printReconstructionToFile(vector<int> pesos, string filepath)
             for(auto j = 0; j < gap; j++) 
                 output << " ";
             output << nodes[path[i]]->fragment<<endl;
+        }
+    }
+    output.close();
+}
+void graph::exportGraphToFile(string filepath)
+{
+    ofstream output(filepath);
+    if(!output.is_open()){
+        cout << "Error al abrir archivo de grafo\n";
+    }
+    else{
+        for(auto& node : nodes){
+            output  << node.first <<" "<<node.second->inPath<<endl;
+        }
+        output << endl;
+        for(auto& node : nodes){
+            for(auto& edge : node.second->edges){
+                output << edge->origin->name<<" "<< edge->destiny->name<<" "<< edge->t <<" "<<edge->origin->inPath<<endl;
+            }
         }
     }
     output.close();

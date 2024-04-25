@@ -15,13 +15,14 @@ private:
     
 public:
     vector<int> path;
-    void buildGraphFromFile(string filepath);
+    void buildGraphFromFile(string filepath, bool isRandomized= false);
     void addNode(int name, string value);
     void addEdge(Node* ori, Node* des, int t);
     void addEdge(int oriName, int desName, int t);
     void print();
     vector<int> makeHamiltonianPath();
     void printReconstructionToFile(vector<int> pesos, string path);
+    void exportGraphToFile(string filepath);
     ~graph();
 };
 
